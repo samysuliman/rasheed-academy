@@ -58,8 +58,8 @@
       $("dialogTitle").textContent = "إضافة مؤسسة";
       $("dynamicFields").innerHTML = input("code","الرمز المختصر")+input("name_ar","الاسم العربي")+input("name_en","الاسم الإنجليزي",false)+input("email","البريد الإلكتروني",false,"email")+input("phone","رقم الهاتف",false)+select("status","الحالة",[["active","نشط"],["inactive","غير نشط"]]);
     } else if(type === "school"){
-      $("dialogTitle").textContent = "إضافة مجمع تعليمي / قسم";
-      $("dynamicFields").innerHTML = select("organization_id","المؤسسة",state.organizations.map(x=>[x.id,x.name_ar]))+input("code","الرمز المختصر")+input("complex_name","اسم المجمع الأساسي (مثال: مجمع العارض)")+input("name_en","الاسم الإنجليزي",false)+select("education_type","نوع المجمع",[["private","أهلي"],["international","عالمي"],["egyptian","مصري"],["quran","قرآن كريم ودراسة حرة"],["training","تدريب"],["other","أخرى"]])+select("gender_section","القسم",[["boys","قسم البنين"],["girls","قسم البنات"],["mixed","قسم مشترك"],["unspecified","غير محدد"]]);
+      $("dialogTitle").textContent = "إضافة مركز تعليمي / قسم";
+      $("dynamicFields").innerHTML = select("organization_id","المؤسسة",state.organizations.map(x=>[x.id,x.name_ar]))+input("code","الرمز المختصر")+input("complex_name","اسم المركز أو القسم")+input("name_en","الاسم الإنجليزي",false)+select("education_type","نوع المركز",[["private","أهلي"],["international","عالمي"],["egyptian","مصري"],["quran","قرآن كريم ودراسة حرة"],["training","تدريب"],["other","أخرى"]])+select("gender_section","القسم",[["boys","قسم البنين"],["girls","قسم البنات"],["mixed","قسم مشترك"],["unspecified","غير محدد"]]);
     } else {
       $("dialogTitle").textContent = "إضافة فرع";
       $("dynamicFields").innerHTML = select("school_id","المجمع / القسم",state.schools.map(x=>[x.id,complexDisplayName(x)]))+input("code","الرمز المختصر")+input("name_ar","الاسم العربي")+input("name_en","الاسم الإنجليزي",false)+select("branch_type","نوع الفرع",[["main","رئيسي"],["physical","حضوري"],["online","إلكتروني"],["hybrid","مدمج"]])+input("city","المدينة",false)+`<div><label><input name="is_main" type="checkbox"> تعيينه فرعًا رئيسيًا</label></div>`;
