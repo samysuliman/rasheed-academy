@@ -1,10 +1,10 @@
 {
-  "name": "أكاديمية رشيد | Rasheed Academy",
+  "name": "أكاديمية رشيد",
   "short_name": "أكاديمية رشيد",
-  "description": "أكاديمية تعليمية مستقلة للقرآن والعلوم الشرعية والتعليم الأهلي والعالمي والمصري.",
+  "description": "للقرآن الكريم والعلوم الشرعية والتعليم المدرسي",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "./index.html",
+  "start_url": "./index.html?source=pwa",
   "scope": "./",
   "display": "standalone",
   "background_color": "#fbf7ee",
@@ -20,7 +20,23 @@
       "src": "assets/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
+  ],
+  "id": "./",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "orientation": "any",
+  "categories": [
+    "education",
+    "productivity"
   ]
 }
