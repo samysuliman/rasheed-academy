@@ -907,46 +907,62 @@ tbody tr:nth-child(even){
 <div class="report">
 
 
-  <div class="header">
+ <div class="header">
 
+  <div class="header-layout">
 
-    <img
-      src="${logoUrl}"
-      alt="شعار مدارس الجيل الجديد العالمية"
-      class="logo"
-    >
-
-
-    <div class="school-name">
-      مدارس الجيل الجديد العالمية
+    <div class="header-school-logo">
+      <img
+        src="${logoUrl}"
+        alt="شعار مدارس الجيل الجديد العالمية"
+        class="school-logo"
+      >
     </div>
 
+    <div class="header-center">
 
-    <div class="school-en">
-      New Generation International Schools
+      <div class="school-name">
+        مدارس الجيل الجديد العالمية
+      </div>
+
+      <div class="school-en">
+        New Generation International Schools
+      </div>
+
+      <div class="report-title">
+        تقرير حصر طلاب اللغة العربية لغير الناطقين بها
+      </div>
+
+      <div class="report-subtitle">
+        Arabic Language Program – Student Census Report
+      </div>
+
+      <div class="report-date">
+        تاريخ إعداد التقرير:
+        ${safe(reportDate)}
+      </div>
+
     </div>
 
+    <div class="header-official-logos">
 
-    <div class="report-title">
-      تقرير حصر طلاب اللغة العربية لغير الناطقين بها
-    </div>
+      <img
+        src="${ministryLogoUrl}"
+        alt="شعار وزارة التعليم"
+        class="official-logo ministry-logo"
+      >
 
-
-    <div class="report-subtitle">
-      Arabic Language Program – Student Census Report
-    </div>
-
-
-    <div class="report-date">
-
-      تاريخ إعداد التقرير:
-
-      ${safe(reportDate)}
+      <img
+        src="${cogniaLogoUrl}"
+        alt="شعار Cognia"
+        class="official-logo cognia-logo"
+      >
 
     </div>
-
 
   </div>
+
+</div>
 
 
 
