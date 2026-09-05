@@ -1,0 +1,9 @@
+التحديث الجديد:
+1) رابط المعلمين والمعلمات بعد الرفع:
+   https://samysuliman.github.io/rasheed-academy/arabic-non-native/register-student.html
+2) لوحة الحصر الخاصة بك بعد تسجيل دخول المدير:
+   https://samysuliman.github.io/rasheed-academy/admin/non-native-students.html
+3) قبل أول استخدام فقط: افتح Supabase > SQL Editor وشغّل محتوى:
+   supabase/NON_NATIVE_STUDENTS_SETUP.sql
+4) النموذج مصمم للجوال، ويجمع: الاسم، بنين/بنات، المرحلة، الصف، الشعبة، أمريكي/بريطاني، واسم المعلم/المعلمة.
+5) بمجرد الضغط على إرسال تظهر البيانات في لوحة الحصر عندك، مع عدادات وفلاتر وتصدير CSV.
