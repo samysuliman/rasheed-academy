@@ -1,1 +1,1061 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>حصر طلاب العربية | أكاديمية رشيد</title><link rel="stylesheet" href="../assets/css/styles.css"><style>.filters{display:grid;grid-template-columns:2fr repeat(4,1fr);gap:8px;margin:16px 0}.kpis{margin-bottom:14px}.table-wrap{overflow:auto}.table{min-width:950px}.tag{padding:5px 9px;border-radius:999px;background:#eef6f2;white-space:nowrap}.actions{display:flex;gap:8px;flex-wrap:wrap}.group-title{margin:20px 0 8px;color:#07583f}@media(max-width:850px){.filters{grid-template-columns:1fr 1fr}.filters input{grid-column:1/-1}}</style></head><body><header class="topbar"><div class="container nav"><a class="brand" href="dashboard.html"><span class="brand-mark">ر</span><span>أكاديمية رشيد<small>برنامج العربية لغير الناطقين بها</small></span></a><a class="btn btn-secondary" href="#" data-admin-logout>تسجيل الخروج</a></div></header><main class="page"><div class="container"><h1 class="page-title">حصر طلاب اللغة العربية لغير الناطقين بها</h1><p class="muted">تظهر هنا البيانات فور إرسالها من المعلمين والمعلمات.</p><div class="kpis"><div class="kpi"><span>الإجمالي</span><strong id="kAll">—</strong></div><div class="kpi"><span>البنين</span><strong id="kBoys">—</strong></div><div class="kpi"><span>البنات</span><strong id="kGirls">—</strong></div><div class="kpi"><span>أمريكي</span><strong id="kAm">—</strong></div><div class="kpi"><span>بريطاني</span><strong id="kBr">—</strong></div></div><div class="actions"><button class="btn btn-primary" id="refreshBtn">تحديث الآن</button><button class="btn btn-light" id="csvBtn">تصدير CSV</button><a class="btn btn-light" target="_blank" href="../arabic-non-native/register-student.html">فتح رابط التسجيل</a></div><div class="filters"><input id="q" type="search" placeholder="بحث باسم الطالب أو المعلم..."><select id="gender"><option value="">بنين وبنات</option><option>بنين</option><option>بنات</option></select><select id="stage"><option value="">كل المراحل</option><option>رياض أطفال</option><option>ابتدائي</option><option>متوسط</option><option>ثانوي</option></select><select id="curr"><option value="">أمريكي وبريطاني</option><option>أمريكي</option><option>بريطاني</option></select><select id="grade"><option value="">كل الصفوف</option></select></div><div id="loadError" class="notice hide"></div><div class="table-wrap"><table class="table"><thead><tr><th>#</th><th>اسم الطالب</th><th>الجنس</th><th>المرحلة</th><th>الصف</th><th>الشعبة</th><th>القسم</th><th>المعلم/المعلمة</th><th>وقت التسجيل</th></tr></thead><tbody id="body"><tr><td colspan="9" style="text-align:center">جارٍ التحميل...</td></tr></tbody></table></div></div></main><script src="../assets/js/admin.js?v=1.4.0"></script><script src="../assets/js/non-native-admin.js?v=1"></script></body></html>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>حصر طلاب العربية | أكاديمية رشيد</title>
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+
+  <style>
+    .filters{
+      display:grid;
+      grid-template-columns:2fr repeat(4,1fr);
+      gap:8px;
+      margin:16px 0
+    }
+
+    .kpis{
+      margin-bottom:14px
+    }
+
+    .table-wrap{
+      overflow:auto
+    }
+
+    .table{
+      min-width:950px
+    }
+
+    .tag{
+      padding:5px 9px;
+      border-radius:999px;
+      background:#eef6f2;
+      white-space:nowrap
+    }
+
+    .actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap
+    }
+
+    .group-title{
+      margin:20px 0 8px;
+      color:#07583f
+    }
+
+    .btn-report{
+      background:#fff7df;
+      border:1px solid #dfbd55;
+      color:#73591a;
+      font-weight:800
+    }
+
+    .btn-report:hover{
+      background:#ffefbc
+    }
+
+    @media(max-width:850px){
+      .filters{
+        grid-template-columns:1fr 1fr
+      }
+
+      .filters input{
+        grid-column:1/-1
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="container nav">
+
+    <a class="brand" href="dashboard.html">
+      <span class="brand-mark">ر</span>
+
+      <span>
+        أكاديمية رشيد
+        <small>برنامج العربية لغير الناطقين بها</small>
+      </span>
+    </a>
+
+    <a
+      class="btn btn-secondary"
+      href="#"
+      data-admin-logout
+    >
+      تسجيل الخروج
+    </a>
+
+  </div>
+</header>
+
+
+<main class="page">
+
+  <div class="container">
+
+    <h1 class="page-title">
+      حصر طلاب اللغة العربية لغير الناطقين بها
+    </h1>
+
+    <p class="muted">
+      تظهر هنا البيانات فور إرسالها من المعلمين والمعلمات.
+    </p>
+
+
+    <!-- الإحصائيات -->
+
+    <div class="kpis">
+
+      <div class="kpi">
+        <span>الإجمالي</span>
+        <strong id="kAll">—</strong>
+      </div>
+
+      <div class="kpi">
+        <span>البنين</span>
+        <strong id="kBoys">—</strong>
+      </div>
+
+      <div class="kpi">
+        <span>البنات</span>
+        <strong id="kGirls">—</strong>
+      </div>
+
+      <div class="kpi">
+        <span>أمريكي</span>
+        <strong id="kAm">—</strong>
+      </div>
+
+      <div class="kpi">
+        <span>بريطاني</span>
+        <strong id="kBr">—</strong>
+      </div>
+
+    </div>
+
+
+    <!-- الأزرار -->
+
+    <div class="actions">
+
+      <button
+        class="btn btn-primary"
+        id="refreshBtn"
+      >
+        تحديث الآن
+      </button>
+
+      <button
+        class="btn btn-light"
+        id="csvBtn"
+      >
+        تصدير CSV
+      </button>
+
+      <button
+        class="btn btn-report"
+        id="pdfBtn"
+      >
+        تصدير تقرير PDF للإدارة
+      </button>
+
+      <a
+        class="btn btn-light"
+        target="_blank"
+        href="../arabic-non-native/register-student.html"
+      >
+        فتح رابط التسجيل
+      </a>
+
+    </div>
+
+
+    <!-- الفلاتر -->
+
+    <div class="filters">
+
+      <input
+        id="q"
+        type="search"
+        placeholder="بحث باسم الطالب أو المعلم..."
+      >
+
+      <select id="gender">
+        <option value="">بنين وبنات</option>
+        <option>بنين</option>
+        <option>بنات</option>
+      </select>
+
+      <select id="stage">
+        <option value="">كل المراحل</option>
+        <option>رياض أطفال</option>
+        <option>ابتدائي</option>
+        <option>متوسط</option>
+        <option>ثانوي</option>
+      </select>
+
+      <select id="curr">
+        <option value="">أمريكي وبريطاني</option>
+        <option>أمريكي</option>
+        <option>بريطاني</option>
+      </select>
+
+      <select id="grade">
+        <option value="">كل الصفوف</option>
+      </select>
+
+    </div>
+
+
+    <div
+      id="loadError"
+      class="notice hide"
+    ></div>
+
+
+    <!-- الجدول -->
+
+    <div class="table-wrap">
+
+      <table class="table">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>اسم الطالب</th>
+            <th>الجنس</th>
+            <th>المرحلة</th>
+            <th>الصف</th>
+            <th>الشعبة</th>
+            <th>القسم</th>
+            <th>المعلم/المعلمة</th>
+            <th>وقت التسجيل</th>
+          </tr>
+        </thead>
+
+        <tbody id="body">
+
+          <tr>
+            <td
+              colspan="9"
+              style="text-align:center"
+            >
+              جارٍ التحميل...
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</main>
+
+
+<script src="../assets/js/admin.js?v=1.4.0"></script>
+
+<script src="../assets/js/non-native-admin.js?v=1"></script>
+
+
+<script>
+
+(function(){
+
+  const pdfBtn =
+    document.getElementById('pdfBtn');
+
+
+  if(!pdfBtn){
+    return;
+  }
+
+
+  function safe(value){
+
+    return String(value ?? '')
+      .replace(
+        /[&<>"']/g,
+        function(character){
+
+          return {
+            '&':'&amp;',
+            '<':'&lt;',
+            '>':'&gt;',
+            '"':'&quot;',
+            "'":'&#39;'
+          }[character];
+
+        }
+      );
+
+  }
+
+
+  pdfBtn.addEventListener(
+    'click',
+    function(){
+
+      /*
+        نستخدم نفس البيانات المفلترة
+        التي تعرضها صفحة الإدارة.
+      */
+
+      let data = [];
+
+
+      if(typeof filtered === 'function'){
+
+        data = filtered();
+
+      }
+
+
+      if(!Array.isArray(data) || data.length === 0){
+
+        alert(
+          'لا توجد بيانات مطابقة لتصديرها.'
+        );
+
+        return;
+
+      }
+
+
+      const boys =
+        data.filter(
+          item =>
+            item.gender === 'بنين'
+        ).length;
+
+
+      const girls =
+        data.filter(
+          item =>
+            item.gender === 'بنات'
+        ).length;
+
+
+      const american =
+        data.filter(
+          item =>
+            item.curriculum === 'أمريكي'
+        ).length;
+
+
+      const british =
+        data.filter(
+          item =>
+            item.curriculum === 'بريطاني'
+        ).length;
+
+
+      const reportDate =
+        new Intl.DateTimeFormat(
+          'ar-SA',
+          {
+            dateStyle:'long',
+            timeStyle:'short'
+          }
+        ).format(
+          new Date()
+        );
+
+
+      /*
+        رابط شعار مدارس الجيل الجديد
+        الموجود داخل مشروع الأكاديمية.
+      */
+
+      const logoUrl =
+        new URL(
+          '../assets/images/school/new-generation-logo.jpg',
+          window.location.href
+        ).href;
+
+
+      const rows =
+        data.map(
+          function(student,index){
+
+            return `
+              <tr>
+
+                <td>
+                  ${index + 1}
+                </td>
+
+                <td>
+                  ${safe(student.student_name)}
+                </td>
+
+                <td>
+                  ${safe(student.gender)}
+                </td>
+
+                <td>
+                  ${safe(student.stage)}
+                </td>
+
+                <td>
+                  ${safe(student.grade)}
+                </td>
+
+                <td>
+                  ${safe(student.section_name)}
+                </td>
+
+                <td>
+                  ${safe(student.curriculum)}
+                </td>
+
+                <td>
+                  ${safe(student.submitted_by)}
+                </td>
+
+              </tr>
+            `;
+
+          }
+        ).join('');
+
+
+      const reportWindow =
+        window.open(
+          '',
+          '_blank'
+        );
+
+
+      if(!reportWindow){
+
+        alert(
+          'يرجى السماح بالنوافذ المنبثقة حتى يتم فتح التقرير.'
+        );
+
+        return;
+
+      }
+
+
+      reportWindow.document.write(`
+
+<!doctype html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
+<title>
+تقرير حصر طلاب اللغة العربية لغير الناطقين بها
+</title>
+
+
+<style>
+
+@page{
+
+  size:A4 landscape;
+
+  margin:12mm;
+
+}
+
+
+*{
+
+  box-sizing:border-box;
+
+}
+
+
+body{
+
+  margin:0;
+
+  background:white;
+
+  color:#17392c;
+
+  font-family:
+    Tahoma,
+    Arial,
+    sans-serif;
+
+}
+
+
+.report{
+
+  width:100%;
+
+  margin:auto;
+
+}
+
+
+.header{
+
+  text-align:center;
+
+  border-bottom:
+    4px solid #0b6845;
+
+  padding-bottom:14px;
+
+  margin-bottom:18px;
+
+}
+
+
+.logo{
+
+  width:88px;
+
+  height:88px;
+
+  object-fit:contain;
+
+  border-radius:50%;
+
+  margin-bottom:5px;
+
+}
+
+
+.school-name{
+
+  font-size:20px;
+
+  font-weight:900;
+
+  color:#07583f;
+
+  margin-top:3px;
+
+}
+
+
+.school-en{
+
+  direction:ltr;
+
+  font-size:10px;
+
+  color:#747474;
+
+  margin-top:3px;
+
+}
+
+
+.report-title{
+
+  font-size:25px;
+
+  font-weight:900;
+
+  color:#153f30;
+
+  margin-top:16px;
+
+}
+
+
+.report-subtitle{
+
+  direction:ltr;
+
+  font-size:11px;
+
+  color:#777;
+
+  margin-top:4px;
+
+}
+
+
+.report-date{
+
+  font-size:12px;
+
+  color:#666;
+
+  margin-top:9px;
+
+}
+
+
+.summary{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(5,1fr);
+
+  gap:9px;
+
+  margin:
+    18px 0;
+
+}
+
+
+.summary-card{
+
+  border:
+    1px solid #cbded5;
+
+  border-radius:11px;
+
+  padding:
+    10px 7px;
+
+  text-align:center;
+
+}
+
+
+.summary-card span{
+
+  display:block;
+
+  font-size:11px;
+
+  color:#697871;
+
+}
+
+
+.summary-card strong{
+
+  display:block;
+
+  margin-top:4px;
+
+  font-size:22px;
+
+  color:#07583f;
+
+}
+
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  font-size:11px;
+
+}
+
+
+th,
+td{
+
+  border:
+    1px solid #cad8d2;
+
+  padding:
+    7px 5px;
+
+  text-align:center;
+
+  vertical-align:middle;
+
+}
+
+
+th{
+
+  background:#e8f3ee;
+
+  color:#123e2f;
+
+  font-weight:900;
+
+}
+
+
+tbody tr:nth-child(even){
+
+  background:#fafcfb;
+
+}
+
+
+.footer{
+
+  display:flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-end;
+
+  margin-top:25px;
+
+  padding-top:14px;
+
+  border-top:
+    1px solid #d8e4de;
+
+}
+
+
+.prepared-by{
+
+  font-size:15px;
+
+  font-weight:900;
+
+  color:#07583f;
+
+}
+
+
+.program-name{
+
+  margin-top:4px;
+
+  font-size:11px;
+
+  color:#777;
+
+}
+
+
+.school-footer{
+
+  font-size:11px;
+
+  color:#777;
+
+}
+
+
+.print-note{
+
+  text-align:center;
+
+  font-size:10px;
+
+  color:#999;
+
+  margin-top:15px;
+
+}
+
+
+@media print{
+
+  body{
+
+    -webkit-print-color-adjust:
+      exact;
+
+    print-color-adjust:
+      exact;
+
+  }
+
+
+  tr{
+
+    break-inside:
+      avoid;
+
+  }
+
+
+  .print-note{
+
+    display:none;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="report">
+
+
+  <!-- رأس التقرير -->
+
+  <div class="header">
+
+
+    <img
+      src="${logoUrl}"
+      alt="شعار مدارس الجيل الجديد العالمية"
+      class="logo"
+    >
+
+
+    <div class="school-name">
+      مدارس الجيل الجديد العالمية
+    </div>
+
+
+    <div class="school-en">
+      New Generation International Schools
+    </div>
+
+
+    <div class="report-title">
+      تقرير حصر طلاب اللغة العربية لغير الناطقين بها
+    </div>
+
+
+    <div class="report-subtitle">
+      Arabic Language Program
+      –
+      Student Census Report
+    </div>
+
+
+    <div class="report-date">
+
+      تاريخ إعداد التقرير:
+
+      ${safe(reportDate)}
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- الإحصائيات -->
+
+  <div class="summary">
+
+
+    <div class="summary-card">
+
+      <span>
+        إجمالي الطلاب
+      </span>
+
+      <strong>
+        ${data.length}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <span>
+        البنين
+      </span>
+
+      <strong>
+        ${boys}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <span>
+        البنات
+      </span>
+
+      <strong>
+        ${girls}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <span>
+        القسم الأمريكي
+      </span>
+
+      <strong>
+        ${american}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <span>
+        القسم البريطاني
+      </span>
+
+      <strong>
+        ${british}
+      </strong>
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- جدول الطلاب -->
+
+  <table>
+
+
+    <thead>
+
+      <tr>
+
+        <th>
+          #
+        </th>
+
+        <th>
+          اسم الطالب
+        </th>
+
+        <th>
+          الجنس
+        </th>
+
+        <th>
+          المرحلة
+        </th>
+
+        <th>
+          الصف
+        </th>
+
+        <th>
+          الشعبة
+        </th>
+
+        <th>
+          القسم
+        </th>
+
+        <th>
+          المعلم / المعلمة
+        </th>
+
+      </tr>
+
+    </thead>
+
+
+    <tbody>
+
+      ${rows}
+
+    </tbody>
+
+
+  </table>
+
+
+
+  <!-- نهاية التقرير -->
+
+  <div class="footer">
+
+
+    <div>
+
+      <div class="prepared-by">
+        إعداد: سامي سليمان السيد
+      </div>
+
+
+      <div class="program-name">
+        برنامج اللغة العربية لغير الناطقين بها
+      </div>
+
+    </div>
+
+
+    <div class="school-footer">
+      مدارس الجيل الجديد العالمية
+    </div>
+
+
+  </div>
+
+
+  <div class="print-note">
+    اختر
+    Save as PDF
+    أو
+    حفظ بتنسيق PDF
+    من نافذة الطباعة.
+  </div>
+
+
+</div>
+
+
+
+<script>
+
+window.onload = function(){
+
+  setTimeout(
+    function(){
+
+      window.print();
+
+    },
+    600
+  );
+
+};
+
+<\/script>
+
+
+</body>
+
+</html>
+
+      `);
+
+
+      reportWindow.document.close();
+
+    }
+  );
+
+})();
+
+</script>
+
+
+</body>
+</html>
