@@ -267,12 +267,10 @@
 <script src="../assets/js/non-native-admin.js?v=2"></script>
 
 <script>
-
 (function(){
 
   const pdfBtn =
     document.getElementById('pdfBtn');
-
 
   if(!pdfBtn){
     return;
@@ -300,14 +298,36 @@
   }
 
 
+  function formatDate(value){
+
+    if(!value){
+      return '—';
+    }
+
+    try{
+
+      return new Intl.DateTimeFormat(
+        'ar-SA',
+        {
+          dateStyle:'short',
+          timeStyle:'short'
+        }
+      ).format(
+        new Date(value)
+      );
+
+    }catch(error){
+
+      return safe(value);
+
+    }
+
+  }
+
+
   pdfBtn.addEventListener(
     'click',
     function(){
-
-      /*
-        نستخدم نفس البيانات المفلترة
-        التي تعرضها صفحة الإدارة.
-      */
 
       let data = [];
 
@@ -319,7 +339,10 @@
       }
 
 
-      if(!Array.isArray(data) || data.length === 0){
+      if(
+        !Array.isArray(data) ||
+        data.length === 0
+      ){
 
         alert(
           'لا توجد بيانات مطابقة لتصديرها.'
@@ -370,11 +393,6 @@
         );
 
 
-      /*
-        رابط شعار مدارس الجيل الجديد
-        الموجود داخل مشروع الأكاديمية.
-      */
-
       const logoUrl =
         new URL(
           '../assets/images/school/new-generation-logo.jpg',
@@ -382,7 +400,7 @@
         ).href;
 
 
-      const rows =
+      const reportRows =
         data.map(
           function(student,index){
 
@@ -393,7 +411,7 @@
                   ${index + 1}
                 </td>
 
-                <td>
+                <td class="student-name">
                   ${safe(student.student_name)}
                 </td>
 
@@ -419,6 +437,10 @@
 
                 <td>
                   ${safe(student.submitted_by)}
+                </td>
+
+                <td class="date-cell">
+                  ${formatDate(student.created_at)}
                 </td>
 
               </tr>
@@ -472,7 +494,7 @@
 
   size:A4 landscape;
 
-  margin:12mm;
+  margin:10mm;
 
 }
 
@@ -484,11 +506,19 @@
 }
 
 
+html,
 body{
 
   margin:0;
 
-  background:white;
+  padding:0;
+
+  background:#ffffff;
+
+}
+
+
+body{
 
   color:#17392c;
 
@@ -504,7 +534,7 @@ body{
 
   width:100%;
 
-  margin:auto;
+  margin:0 auto;
 
 }
 
@@ -513,40 +543,40 @@ body{
 
   text-align:center;
 
+  padding-bottom:13px;
+
+  margin-bottom:15px;
+
   border-bottom:
     4px solid #0b6845;
-
-  padding-bottom:14px;
-
-  margin-bottom:18px;
 
 }
 
 
 .logo{
 
-  width:88px;
+  width:82px;
 
-  height:88px;
+  height:82px;
 
   object-fit:contain;
 
   border-radius:50%;
 
-  margin-bottom:5px;
+  margin-bottom:4px;
 
 }
 
 
 .school-name{
 
-  font-size:20px;
+  font-size:19px;
 
   font-weight:900;
 
   color:#07583f;
 
-  margin-top:3px;
+  margin-top:2px;
 
 }
 
@@ -555,24 +585,24 @@ body{
 
   direction:ltr;
 
-  font-size:10px;
+  font-size:9px;
 
-  color:#747474;
+  color:#777;
 
-  margin-top:3px;
+  margin-top:2px;
 
 }
 
 
 .report-title{
 
-  font-size:25px;
+  font-size:23px;
 
   font-weight:900;
 
   color:#153f30;
 
-  margin-top:16px;
+  margin-top:13px;
 
 }
 
@@ -581,22 +611,22 @@ body{
 
   direction:ltr;
 
-  font-size:11px;
+  font-size:10px;
 
   color:#777;
 
-  margin-top:4px;
+  margin-top:3px;
 
 }
 
 
 .report-date{
 
-  font-size:12px;
+  font-size:11px;
 
   color:#666;
 
-  margin-top:9px;
+  margin-top:7px;
 
 }
 
@@ -608,10 +638,10 @@ body{
   grid-template-columns:
     repeat(5,1fr);
 
-  gap:9px;
+  gap:8px;
 
   margin:
-    18px 0;
+    15px 0;
 
 }
 
@@ -621,12 +651,14 @@ body{
   border:
     1px solid #cbded5;
 
-  border-radius:11px;
+  border-radius:10px;
 
   padding:
-    10px 7px;
+    8px 6px;
 
   text-align:center;
+
+  background:#ffffff;
 
 }
 
@@ -635,7 +667,7 @@ body{
 
   display:block;
 
-  font-size:11px;
+  font-size:10px;
 
   color:#697871;
 
@@ -646,11 +678,25 @@ body{
 
   display:block;
 
-  margin-top:4px;
+  margin-top:3px;
 
-  font-size:22px;
+  font-size:20px;
 
   color:#07583f;
+
+}
+
+
+.table-title{
+
+  font-size:14px;
+
+  font-weight:900;
+
+  color:#07583f;
+
+  margin:
+    8px 0;
 
 }
 
@@ -661,7 +707,9 @@ table{
 
   border-collapse:collapse;
 
-  font-size:11px;
+  table-layout:fixed;
+
+  font-size:9.5px;
 
 }
 
@@ -673,11 +721,13 @@ td{
     1px solid #cad8d2;
 
   padding:
-    7px 5px;
+    6px 4px;
 
   text-align:center;
 
   vertical-align:middle;
+
+  word-wrap:break-word;
 
 }
 
@@ -700,6 +750,22 @@ tbody tr:nth-child(even){
 }
 
 
+.student-name{
+
+  font-weight:800;
+
+}
+
+
+.date-cell{
+
+  white-space:nowrap;
+
+  font-size:8.5px;
+
+}
+
+
 .footer{
 
   display:flex;
@@ -710,9 +776,9 @@ tbody tr:nth-child(even){
   align-items:
     flex-end;
 
-  margin-top:25px;
+  margin-top:22px;
 
-  padding-top:14px;
+  padding-top:12px;
 
   border-top:
     1px solid #d8e4de;
@@ -722,7 +788,7 @@ tbody tr:nth-child(even){
 
 .prepared-by{
 
-  font-size:15px;
+  font-size:13px;
 
   font-weight:900;
 
@@ -731,11 +797,22 @@ tbody tr:nth-child(even){
 }
 
 
+.teacher-role{
+
+  display:inline;
+
+  color:#17392c;
+
+  font-weight:700;
+
+}
+
+
 .program-name{
 
   margin-top:4px;
 
-  font-size:11px;
+  font-size:10px;
 
   color:#777;
 
@@ -744,22 +821,33 @@ tbody tr:nth-child(even){
 
 .school-footer{
 
-  font-size:11px;
+  font-size:10px;
 
   color:#777;
 
 }
 
 
-.print-note{
+.screen-note{
+
+  margin-top:15px;
+
+  padding:10px;
+
+  border-radius:8px;
+
+  background:#fff8df;
+
+  border:
+    1px solid #e5ca72;
+
+  color:#725913;
 
   text-align:center;
 
-  font-size:10px;
+  font-size:11px;
 
-  color:#999;
-
-  margin-top:15px;
+  line-height:1.7;
 
 }
 
@@ -782,12 +870,15 @@ tbody tr:nth-child(even){
     break-inside:
       avoid;
 
+    page-break-inside:
+      avoid;
+
   }
 
 
-  .print-note{
+  .screen-note{
 
-    display:none;
+    display:none !important;
 
   }
 
@@ -803,8 +894,6 @@ tbody tr:nth-child(even){
 
 <div class="report">
 
-
-  <!-- رأس التقرير -->
 
   <div class="header">
 
@@ -832,9 +921,7 @@ tbody tr:nth-child(even){
 
 
     <div class="report-subtitle">
-      Arabic Language Program
-      –
-      Student Census Report
+      Arabic Language Program – Student Census Report
     </div>
 
 
@@ -850,8 +937,6 @@ tbody tr:nth-child(even){
   </div>
 
 
-
-  <!-- الإحصائيات -->
 
   <div class="summary">
 
@@ -925,7 +1010,10 @@ tbody tr:nth-child(even){
 
 
 
-  <!-- جدول الطلاب -->
+  <div class="table-title">
+    بيانات الطلاب
+  </div>
+
 
   <table>
 
@@ -934,36 +1022,40 @@ tbody tr:nth-child(even){
 
       <tr>
 
-        <th>
+        <th style="width:4%">
           #
         </th>
 
-        <th>
+        <th style="width:17%">
           اسم الطالب
         </th>
 
-        <th>
+        <th style="width:8%">
           الجنس
         </th>
 
-        <th>
+        <th style="width:10%">
           المرحلة
         </th>
 
-        <th>
+        <th style="width:11%">
           الصف
         </th>
 
-        <th>
+        <th style="width:7%">
           الشعبة
         </th>
 
-        <th>
+        <th style="width:9%">
           القسم
         </th>
 
-        <th>
+        <th style="width:17%">
           المعلم / المعلمة
+        </th>
+
+        <th style="width:17%">
+          وقت التسجيل
         </th>
 
       </tr>
@@ -973,7 +1065,7 @@ tbody tr:nth-child(even){
 
     <tbody>
 
-      ${rows}
+      ${reportRows}
 
     </tbody>
 
@@ -982,15 +1074,20 @@ tbody tr:nth-child(even){
 
 
 
-  <!-- نهاية التقرير -->
-
   <div class="footer">
 
 
     <div>
 
       <div class="prepared-by">
-        إعداد: سامي سليمان السيد
+
+        إعداد:
+        سامي سليمان السيد
+
+        <span class="teacher-role">
+          — معلم اللغة العربية لغير الناطقين بها
+        </span>
+
       </div>
 
 
@@ -1009,12 +1106,14 @@ tbody tr:nth-child(even){
   </div>
 
 
-  <div class="print-note">
-    اختر
-    Save as PDF
-    أو
-    حفظ بتنسيق PDF
-    من نافذة الطباعة.
+  <div class="screen-note">
+
+    عند الحفظ بصيغة PDF:
+    من إعدادات الطباعة ألغِ تحديد
+    <strong>الرؤوس والتذييلات</strong>
+    لإزالة عنوان الصفحة والتاريخ وعبارة
+    about:blank.
+
   </div>
 
 
@@ -1032,7 +1131,7 @@ window.onload = function(){
       window.print();
 
     },
-    600
+    700
   );
 
 };
