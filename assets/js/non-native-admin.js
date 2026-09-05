@@ -1,5 +1,470 @@
-let rows=[];const $=id=>document.getElementById(id);const esc2=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function load(){const ok=await requireAdmin();if(!ok)return;const r=await api('/rest/v1/non_native_students?select=*&order=gender.asc,stage.asc,curriculum.asc,grade.asc,section_name.asc,student_name.asc');if(!r.ok){$('loadError').textContent='تعذر تحميل القائمة. شغّل ملف إعداد قاعدة البيانات أولًا.';$('loadError').classList.remove('hide');return;}rows=await r.json();const grades=[...new Set(rows.map(x=>x.grade).filter(Boolean))];$('grade').innerHTML='<option value="">كل الصفوف</option>'+grades.map(x=>`<option>${esc2(x)}</option>`).join('');render();}
-function filtered(){const q=$('q').value.trim().toLowerCase();return rows.filter(r=>(!q||[r.student_name,r.submitted_by,r.section_name].join(' ').toLowerCase().includes(q))&&(!$('gender').value||r.gender===$('gender').value)&&(!$('stage').value||r.stage===$('stage').value)&&(!$('curr').value||r.curriculum===$('curr').value)&&(!$('grade').value||r.grade===$('grade').value));}
-function render(){const a=filtered();$('kAll').textContent=rows.length;$('kBoys').textContent=rows.filter(x=>x.gender==='بنين').length;$('kGirls').textContent=rows.filter(x=>x.gender==='بنات').length;$('kAm').textContent=rows.filter(x=>x.curriculum==='أمريكي').length;$('kBr').textContent=rows.filter(x=>x.curriculum==='بريطاني').length;$('body').innerHTML=a.length?a.map((r,i)=>`<tr><td>${i+1}</td><td><strong>${esc2(r.student_name)}</strong></td><td><span class="tag">${esc2(r.gender)}</span></td><td>${esc2(r.stage)}</td><td>${esc2(r.grade)}</td><td>${esc2(r.section_name)}</td><td><span class="tag">${esc2(r.curriculum)}</span></td><td>${esc2(r.submitted_by)}</td><td>${r.created_at?new Intl.DateTimeFormat('ar-SA',{dateStyle:'short',timeStyle:'short'}).format(new Date(r.created_at)):'—'}</td></tr>`).join(''):'<tr><td colspan="9" style="text-align:center">لا توجد بيانات مطابقة.</td></tr>';}
-['q','gender','stage','curr','grade'].forEach(id=>$(id).addEventListener(id==='q'?'input':'change',render));$('refreshBtn').onclick=load;$('csvBtn').onclick=()=>{const a=filtered(),head=['اسم الطالب','الجنس','المرحلة','الصف','الشعبة','القسم','المعلم/المعلمة','وقت التسجيل'];const val=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[head,...a.map(r=>[r.student_name,r.gender,r.stage,r.grade,r.section_name,r.curriculum,r.submitted_by,r.created_at])].map(x=>x.map(val).join(',')).join('\n');const u=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const aEl=document.createElement('a');aEl.href=u;aEl.download='حصر طلاب العربية لغير الناطقين بها.csv';aEl.click();URL.revokeObjectURL(u);};load();
+let rows = [];
+
+const $ = id => document.getElementById(id);
+
+const esc2 = v =>
+  String(v ?? '').replace(
+    /[&<>"']/g,
+    c => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[c])
+  );
+
+
+async function load() {
+
+  const ok = await requireAdmin();
+
+  if (!ok) return;
+
+
+  const r = await api(
+    '/rest/v1/non_native_students?select=*&order=gender.asc,stage.asc,curriculum.asc,grade.asc,section_name.asc,student_name.asc'
+  );
+
+
+  if (!r.ok) {
+
+    $('loadError').textContent =
+      'تعذر تحميل القائمة. شغّل ملف إعداد قاعدة البيانات أولًا.';
+
+    $('loadError').classList.remove('hide');
+
+    return;
+  }
+
+
+  rows = await r.json();
+
+
+  const grades = [
+    ...new Set(
+      rows
+        .map(x => x.grade)
+        .filter(Boolean)
+    )
+  ];
+
+
+  $('grade').innerHTML =
+    '<option value="">كل الصفوف</option>' +
+    grades
+      .map(
+        x => `<option>${esc2(x)}</option>`
+      )
+      .join('');
+
+
+  render();
+}
+
+
+
+function filtered() {
+
+  const q =
+    $('q')
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  return rows.filter(
+    r =>
+
+      (
+        !q ||
+
+        [
+          r.student_name,
+          r.submitted_by,
+          r.section_name
+        ]
+          .join(' ')
+          .toLowerCase()
+          .includes(q)
+      )
+
+      &&
+
+      (
+        !$('gender').value ||
+        r.gender === $('gender').value
+      )
+
+      &&
+
+      (
+        !$('stage').value ||
+        r.stage === $('stage').value
+      )
+
+      &&
+
+      (
+        !$('curr').value ||
+        r.curriculum === $('curr').value
+      )
+
+      &&
+
+      (
+        !$('grade').value ||
+        r.grade === $('grade').value
+      )
+  );
+}
+
+
+
+function render() {
+
+  const a = filtered();
+
+
+  /* الإحصائيات */
+
+  $('kAll').textContent =
+    rows.length;
+
+
+  $('kBoys').textContent =
+    rows.filter(
+      x => x.gender === 'بنين'
+    ).length;
+
+
+  $('kGirls').textContent =
+    rows.filter(
+      x => x.gender === 'بنات'
+    ).length;
+
+
+  $('kAm').textContent =
+    rows.filter(
+      x => x.curriculum === 'أمريكي'
+    ).length;
+
+
+  $('kBr').textContent =
+    rows.filter(
+      x => x.curriculum === 'بريطاني'
+    ).length;
+
+
+
+  /* الجدول */
+
+  $('body').innerHTML =
+    a.length
+
+      ? a.map(
+          (r, i) => `
+
+<tr>
+
+  <td>
+    ${i + 1}
+  </td>
+
+  <td>
+    <strong>
+      ${esc2(r.student_name)}
+    </strong>
+  </td>
+
+  <td>
+    <span class="tag">
+      ${esc2(r.gender)}
+    </span>
+  </td>
+
+  <td>
+    ${esc2(r.stage)}
+  </td>
+
+  <td>
+    ${esc2(r.grade)}
+  </td>
+
+  <td>
+    ${esc2(r.section_name)}
+  </td>
+
+  <td>
+    <span class="tag">
+      ${esc2(r.curriculum)}
+    </span>
+  </td>
+
+  <td>
+    ${esc2(r.submitted_by)}
+  </td>
+
+  <td>
+
+    ${
+      r.created_at
+
+        ? new Intl.DateTimeFormat(
+            'ar-SA',
+            {
+              dateStyle: 'short',
+              timeStyle: 'short'
+            }
+          ).format(
+            new Date(r.created_at)
+          )
+
+        : '—'
+    }
+
+  </td>
+
+
+  <td>
+
+    <button
+      type="button"
+      onclick="deleteStudent(${Number(r.id)}, '${esc2(r.student_name)}')"
+      style="
+        border:1px solid #e5a4a4;
+        background:#fff1f1;
+        color:#a52828;
+        padding:6px 11px;
+        border-radius:8px;
+        cursor:pointer;
+        font-family:inherit;
+        font-weight:700;
+        white-space:nowrap;
+      "
+    >
+      🗑️ حذف
+    </button>
+
+  </td>
+
+</tr>
+
+          `
+        ).join('')
+
+      : `
+
+<tr>
+
+  <td
+    colspan="10"
+    style="text-align:center"
+  >
+    لا توجد بيانات مطابقة.
+  </td>
+
+</tr>
+
+      `;
+}
+
+
+
+/* =========================
+   حذف طالب
+========================= */
+
+async function deleteStudent(
+  id,
+  studentName
+) {
+
+  if (!id) return;
+
+
+  const confirmed =
+    window.confirm(
+      `هل أنت متأكد من حذف الطالب "${studentName}"؟\n\nسيتم استبعاده من الحصر ومن تقرير الإدارة.`
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  const r =
+    await api(
+      '/rest/v1/non_native_students?id=eq.' +
+      encodeURIComponent(id),
+      {
+        method: 'DELETE'
+      }
+    );
+
+
+  if (!r.ok) {
+
+    alert(
+      'تعذر حذف الطالب. يرجى المحاولة مرة أخرى.'
+    );
+
+    return;
+  }
+
+
+  /*
+    حذف الطالب من القائمة المحلية
+    ثم تحديث الإحصائيات فورًا.
+  */
+
+  rows =
+    rows.filter(
+      student =>
+        Number(student.id) !==
+        Number(id)
+    );
+
+
+  render();
+
+
+  alert(
+    `تم حذف "${studentName}" من الحصر بنجاح.`
+  );
+}
+
+
+
+/* =========================
+   الفلاتر
+========================= */
+
+[
+  'q',
+  'gender',
+  'stage',
+  'curr',
+  'grade'
+].forEach(
+  id => {
+
+    $(id).addEventListener(
+      id === 'q'
+        ? 'input'
+        : 'change',
+
+      render
+    );
+
+  }
+);
+
+
+
+/* تحديث */
+
+$('refreshBtn').onclick =
+  load;
+
+
+
+/* =========================
+   تصدير CSV
+========================= */
+
+$('csvBtn').onclick =
+  () => {
+
+    const a =
+      filtered();
+
+
+    const head = [
+      'اسم الطالب',
+      'الجنس',
+      'المرحلة',
+      'الصف',
+      'الشعبة',
+      'القسم',
+      'المعلم/المعلمة',
+      'وقت التسجيل'
+    ];
+
+
+    const val =
+      v =>
+        '"' +
+        String(v ?? '')
+          .replaceAll(
+            '"',
+            '""'
+          ) +
+        '"';
+
+
+    const csv =
+      '\ufeff' +
+
+      [
+        head,
+
+        ...a.map(
+          r => [
+            r.student_name,
+            r.gender,
+            r.stage,
+            r.grade,
+            r.section_name,
+            r.curriculum,
+            r.submitted_by,
+            r.created_at
+          ]
+        )
+      ]
+
+        .map(
+          x =>
+            x.map(val)
+              .join(',')
+        )
+
+        .join('\n');
+
+
+    const u =
+      URL.createObjectURL(
+        new Blob(
+          [csv],
+          {
+            type:
+              'text/csv;charset=utf-8'
+          }
+        )
+      );
+
+
+    const aEl =
+      document.createElement('a');
+
+
+    aEl.href = u;
+
+
+    aEl.download =
+      'حصر طلاب العربية لغير الناطقين بها.csv';
+
+
+    aEl.click();
+
+
+    URL.revokeObjectURL(u);
+
+  };
+
+
+
+/* تشغيل الصفحة */
+
+load();
